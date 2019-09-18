@@ -6,6 +6,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.umeng.analytics.AnalyticsConfig;
 import com.umeng.analytics.MobclickAgent;
@@ -23,6 +24,7 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 public class FlutterUmengAnalyticsPlugin implements MethodCallHandler {
     private Activity activity;
 
+    private static final String TAG = "FlutterUmengAnalyticsPlugin";
     /**
      * Plugin registration.
      */
@@ -54,7 +56,8 @@ public class FlutterUmengAnalyticsPlugin implements MethodCallHandler {
 
     public void init(MethodCall call, Result result) {
         String channelName = getAppMetaData(activity,"UMENG_CHANNEL");
-
+        boolean logable = (boolean)call.argument("logEnable");
+        Log.d(TAG,"ChannelName="+channelName+", logable= "+logable);
         // 设置组件化的Log开关，参数默认为false，如需查看LOG设置为true
         UMConfigure.setLogEnabled((boolean)call.argument("logEnable"));
         /**

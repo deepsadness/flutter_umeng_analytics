@@ -24,7 +24,7 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 public class FlutterUmengAnalyticsPlugin implements MethodCallHandler {
     private Activity activity;
 
-    private static final String TAG = "FlutterUmengAnalyticsPlugin";
+    private static final String TAG = "FlutterUmeng";
     /**
      * Plugin registration.
      */

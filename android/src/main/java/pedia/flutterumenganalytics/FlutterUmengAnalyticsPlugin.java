@@ -2,7 +2,10 @@ package pedia.flutterumenganalytics;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Build;
+import android.text.TextUtils;
 
 import com.umeng.analytics.AnalyticsConfig;
 import com.umeng.analytics.MobclickAgent;
@@ -50,7 +53,7 @@ public class FlutterUmengAnalyticsPlugin implements MethodCallHandler {
     }
 
     public void init(MethodCall call, Result result) {
-        String channelName = AnalyticsConfig.getChannel(activity);
+        String channelName = getAppMetaData(activity,"UMENG_CHANNEL");
 
         // 设置组件化的Log开关，参数默认为false，如需查看LOG设置为true
         UMConfigure.setLogEnabled((boolean)call.argument("logEnable"));
@@ -125,4 +128,26 @@ public class FlutterUmengAnalyticsPlugin implements MethodCallHandler {
         result.success(null);
     }
 
+    public static String getAppMetaData(Context ctx, String key) {
+        if (ctx == null || TextUtils.isEmpty(key)) {
+            return null;
+        }
+        String resultData = null;
+        try {
+            PackageManager packageManager = ctx.getPackageManager();
+            if (packageManager != null) {
+                //注意此处为ApplicationInfo，因为友盟设置的meta-data是在application标签中
+                ApplicationInfo applicationInfo = packageManager.getApplicationInfo(ctx.getPackageName(), PackageManager.GET_META_DATA);
+                if (applicationInfo != null) {
+                    if (applicationInfo.metaData != null) {
+                        //key要与manifest中的配置文件标识一致
+                        resultData = applicationInfo.metaData.getString(key);
+                    }
+                }
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return resultData;
+    }
 }

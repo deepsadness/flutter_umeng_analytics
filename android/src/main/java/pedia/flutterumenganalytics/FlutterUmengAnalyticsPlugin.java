@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 
+import com.umeng.analytics.AnalyticsConfig;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
 
@@ -49,14 +50,16 @@ public class FlutterUmengAnalyticsPlugin implements MethodCallHandler {
     }
 
     public void init(MethodCall call, Result result) {
+        String channelName = AnalyticsConfig.getChannel(activity);
+
         // 设置组件化的Log开关，参数默认为false，如需查看LOG设置为true
-        UMConfigure.setLogEnabled(true);
+        UMConfigure.setLogEnabled((boolean)call.argument("logEnable"));
         /**
          * 初始化common库 参数1：上下文，不能为空 参数2：【友盟+】Appkey名称 参数3：【友盟+】Channel名称
          * 参数4：设备类型，UMConfigure.DEVICE_TYPE_PHONE为手机、UMConfigure.DEVICE_TYPE_BOX为盒子，默认为手机
          * 参数5：Push推送业务的secret
          */
-        UMConfigure.init(activity, (String) call.argument("key"), "Umeng", UMConfigure.DEVICE_TYPE_PHONE, null);
+        UMConfigure.init(activity, (String) call.argument("key"), channelName, UMConfigure.DEVICE_TYPE_PHONE, null);
         // 设置日志加密 参数：boolean 默认为false（不加密）
         UMConfigure.setEncryptEnabled((Boolean) call.argument("encrypt"));
 

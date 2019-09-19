@@ -11,6 +11,7 @@ import android.util.Log;
 import com.umeng.analytics.AnalyticsConfig;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
+import com.umeng.commonsdk.utils.UMUtils;
 
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -92,6 +93,12 @@ public class FlutterUmengAnalyticsPlugin implements MethodCallHandler {
         } else if (results == 1) {
             MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.MANUAL);
         }
+
+        //因为好像上面的渠道设置没有用，手动再设置一个
+        String channel = AnalyticsConfig.getChannel(activity);
+        UMUtils.setChannel(activity,channel);
+        Log.d(TAG,"setChannel ChannelName="+channel);
+
         result.success(true);
     }
 
